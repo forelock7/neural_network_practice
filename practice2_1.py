@@ -21,6 +21,12 @@ class Layer_Dense:
     def forward(self, inputs):
         self.output = np.dot(inputs, self.weights) + self.biases
 
+# Rectified Linear Unit - це популярна активаційна функція.
+# Це дозволяє моделі вводити нелінійність і ефективно навчатися на складних даних.
+class Activation_ReLU:
+    def forward(self, inputs):
+        self.output = np.maximum(0, inputs);
+
 # Створюються три об'єкти LayerDense з різними розмірами.
 # Перший шар приймає 4 вхідні сигнали і виводить 8,
 # другий бере 8 вхідних сигналів з першого шару і теж виводить 8,
@@ -29,12 +35,20 @@ layer1 = Layer_Dense(4, 8)
 layer2 = Layer_Dense(8, 8)
 layer3 = Layer_Dense(8, 2)
 
+# Створюються 2 об'єкти Activation_ReLU для подальшої активації після 2 та 3 шару
+activation2 = Activation_ReLU()
+activation3 = Activation_ReLU()
+
 # За допомогою методу forward кожен шар послідовно обробляє дані,
-# передані від попереднього шару, починаючи з вхідних даних X.
+# передані від попереднього шару та активує його за допомогою "Rectified Linear Unit" функції,
+# починаючи з вхідних даних X.
 layer1.forward(X)
 layer2.forward(layer1.output)
-layer3.forward(layer2.output)
+activation2.forward(layer2.output)
+layer3.forward(activation2.output)
+activation3.forward(layer3.output)
 
 # Виводяться ваги третього шару. Це демонструє,
 # як можна доступитися до параметрів мережі після її ініціалізації та прямого поширення.
-print(layer3.output)
+print("Layer 3:\n", layer3.output)
+print("Activated layer 3:\n", activation3.output)
